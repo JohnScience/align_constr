@@ -1,0 +1,18 @@
+[package]
+name = "constr_align"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+unconst_trait_impl =  "0.1.1"
+remove_macro_call = "0.1.1"
+as-slice = "0.2.1"
+
+[features]
+nightly = ["const_trait_impl", "const_fn_trait_bound", "const_mut_refs"]
+
+const_trait_impl = []
+const_fn_trait_bound = []
+const_mut_refs = []
