@@ -1,7 +1,6 @@
 #![cfg_attr(feature = "const_trait_impl", feature(const_trait_impl))]
 #![cfg_attr(feature = "const_fn_trait_bound", feature(const_fn_trait_bound))]
 #![cfg_attr(feature = "const_mut_refs", feature(const_mut_refs))]
-#![cfg_attr(feature = "const_for", feature(const_for))]
 
 #[cfg(all(feature = "const_trait_impl", feature = "const_fn_trait_bound"))]
 use remove_macro_call::remove_macro_call;
