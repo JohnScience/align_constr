@@ -1,7 +1,7 @@
 #![cfg_attr(feature = "const_trait_impl", feature(const_trait_impl))]
 #![cfg_attr(feature = "const_fn_trait_bound", feature(const_fn_trait_bound))]
 #![cfg_attr(feature = "const_mut_refs", feature(const_mut_refs))]
-#![feature(const_default_impls)]
+#![cfg_attr(feature = "const_for", feature(const_for))]
 
 #[cfg(all(feature = "const_trait_impl", feature = "const_fn_trait_bound"))]
 use remove_macro_call::remove_macro_call;
@@ -206,6 +206,64 @@ unconst_trait_impl! {
     {
         fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
             self.value.fmt(f)
+        }
+    }
+}
+
+#[cfg_attr(
+    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
+    remove_macro_call
+)]
+unconst_trait_impl! {
+    impl<T, AlignConstrArchetype> const PartialEq for AlignConstr<T, AlignConstrArchetype>
+    where
+        T: ~const PartialEq,
+    {
+        fn eq(&self, other: &Self) -> bool {
+            self.value == other.value
+        }
+    }
+}
+
+#[cfg_attr(
+    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
+    remove_macro_call
+)]
+unconst_trait_impl! {
+    impl<T, AlignConstrArchetype> const Eq for AlignConstr<T, AlignConstrArchetype>
+    where
+        T: ~const Eq,
+    {
+        // The following is implemented due to
+        // error: const trait implementations may not use non-const default functions
+        fn assert_receiver_is_total_eq(&self) {}
+    }
+}
+
+#[cfg_attr(
+    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
+    remove_macro_call
+)]
+unconst_trait_impl! {
+    impl<T, AlignConstrArchetype> const core::hash::Hash for AlignConstr<T, AlignConstrArchetype>
+    where
+        T: ~const core::hash::Hash,
+    {
+        fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
+            self.value.hash(state);
+        }
+
+        // The following is implemented due to
+        // error: const trait implementations may not use non-const default functions
+        fn hash_slice<H: core::hash::Hasher>(data: &[Self], state: &mut H)
+        where
+            Self: Sized,
+        {
+            let mut i = 0;
+            while i < data.len() {
+                data[i].hash(state);
+                i+=1;
+            }
         }
     }
 }
