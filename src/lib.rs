@@ -161,3 +161,21 @@ unconst_trait_impl! {
         }
     }
 }
+
+#[cfg_attr(
+    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
+    remove_macro_call
+)]
+unconst_trait_impl! {
+    impl<T, AlignConstrArchetype> const Default for AlignConstr<T, AlignConstrArchetype>
+    where
+        T: ~const Default,
+    {
+        fn default() -> Self {
+            Self {
+                _alignment_constraint: [],
+                value: T::default(),
+            }
+        }
+    }
+}
