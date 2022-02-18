@@ -194,3 +194,18 @@ unconst_trait_impl! {
         }
     }
 }
+
+#[cfg_attr(
+    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
+    remove_macro_call
+)]
+unconst_trait_impl! {
+    impl<T, AlignConstrArchetype> const core::fmt::Display for AlignConstr<T, AlignConstrArchetype>
+    where
+        T: ~const core::fmt::Display,
+    {
+        fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+            self.value.fmt(f)
+        }
+    }
+}
