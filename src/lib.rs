@@ -147,7 +147,7 @@ unconst_trait_impl! {
 unconst_trait_impl! {
     impl<T, AlignConstrArchetype> const Clone for AlignConstr<T, AlignConstrArchetype>
     where
-        T: ~const Clone + ~const Drop,
+        T: ~const Clone + ~const Drop
     {
         fn clone(&self) -> Self {
             Self {
