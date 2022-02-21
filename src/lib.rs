@@ -254,15 +254,46 @@ unconst_trait_impl! {
 
         // The following is implemented due to
         // error: const trait implementations may not use non-const default functions
-        fn hash_slice<H: core::hash::Hasher>(data: &[Self], state: &mut H)
+        fn hash_slice<H>(data: &[Self], state: &mut H)
         where
             Self: Sized,
+            H: ~const core::hash::Hasher,
         {
             let mut i = 0;
             while i < data.len() {
                 data[i].hash(state);
                 i+=1;
             }
+        }
+    }
+}
+
+#[cfg_attr(
+    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
+    remove_macro_call
+)]
+unconst_trait_impl! {
+    impl<T, AlignConstrArchetype> const core::cmp::Ord for AlignConstr<T, AlignConstrArchetype>
+    where
+        T: ~const Ord,
+    {
+        fn cmp(&self, other: &Self) -> core::cmp::Ordering {
+            self.value.cmp(&other.value)
+        }
+    }
+}
+
+#[cfg_attr(
+    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
+    remove_macro_call
+)]
+unconst_trait_impl! {
+    impl<T, AlignConstrArchetype> const core::cmp::PartialOrd for AlignConstr<T, AlignConstrArchetype>
+    where
+        T: ~const PartialOrd,
+    {
+        fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
+            self.value.partial_cmp(&other.value)
         }
     }
 }
