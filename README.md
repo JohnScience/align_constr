@@ -3,7 +3,7 @@
 
 # [Alignment][alignment]-constrained [newtype]
 
-[Newtype][newtype] whose [alignment] is constrained not only by the [inherent alignment requirements](https://doc.rust-lang.org/reference/type-layout.html) of the underlying type but also by the alignment requirements of the "alignment constraint archetype". Within this context, "alignment constraint archetype" `AlignConstrArchetype` is a type whose alignment constraint is imposed on the underlying type `T` to produce [AlignConstr`<T, AlignConstrArchetype>`][`AlignConstr`].
+[Newtype][newtype] whose [alignment] is constrained not only by the [inherent alignment requirements](https://doc.rust-lang.org/reference/type-layout.html) of the underlying type but also by the alignment requirements of the "alignment constraint archetype". Within this context, "alignment constraint archetype" `AlignConstrArchetype` is a type whose alignment constraint is imposed on the underlying type `T` to produce [`AlignConstr<T, AlignConstrArchetype>`][`AlignConstr`].
 
 ## Notes
 
@@ -11,7 +11,7 @@
 [stipulative](https://www.ucfmapper.com/education/various-types-definitions/#:~:text=Stipulative%20definitions)
 [functional](https://www.ucfmapper.com/education/various-types-definitions/#:~:text=Functional%20definitions)
 definition.
-* [AlignConstr`<T, AlignConstrArchetype>`][`AlignConstr`] for some underlying type `T` and "alignment constraint archetype" `AlignConstrArchetype` can also be seen as a [refinement type](https://en.wikipedia.org/wiki/Refinement_type) [reified](https://en.wikipedia.org/wiki/Reification_(computer_science)) in the form of a [parameterized](http://www.angelikalanger.com/GenericsFAQ/FAQSections/ParameterizedTypes.html#FAQ001) [newtype].
+* [`AlignConstr<T, AlignConstrArchetype>`][`AlignConstr`] for some underlying type `T` and "alignment constraint archetype" `AlignConstrArchetype` can also be seen as a [refinement type](https://en.wikipedia.org/wiki/Refinement_type) [reified](https://en.wikipedia.org/wiki/Reification_(computer_science)) in the form of a [parameterized](http://www.angelikalanger.com/GenericsFAQ/FAQSections/ParameterizedTypes.html#FAQ001) [newtype].
 
 # Resources on alignment
 
