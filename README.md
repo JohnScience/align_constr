@@ -11,7 +11,7 @@
 [stipulative](https://www.ucfmapper.com/education/various-types-definitions/#:~:text=Stipulative%20definitions)
 [functional](https://www.ucfmapper.com/education/various-types-definitions/#:~:text=Functional%20definitions)
 definition.
-* [AlignConstr`<T, AlignConstrArchetype>`][`AlignConstr`] for some the underlying type `T` and "alignment constraint archetype" `AlignConstrArchetype` can also be seen as a [refinement type](https://en.wikipedia.org/wiki/Refinement_type) [reified](https://en.wikipedia.org/wiki/Reification_(computer_science)) in the form of a [parameterized](http://www.angelikalanger.com/GenericsFAQ/FAQSections/ParameterizedTypes.html#FAQ001) [newtype].
+* [AlignConstr`<T, AlignConstrArchetype>`][`AlignConstr`] for some underlying type `T` and "alignment constraint archetype" `AlignConstrArchetype` can also be seen as a [refinement type](https://en.wikipedia.org/wiki/Refinement_type) [reified](https://en.wikipedia.org/wiki/Reification_(computer_science)) in the form of a [parameterized](http://www.angelikalanger.com/GenericsFAQ/FAQSections/ParameterizedTypes.html#FAQ001) [newtype].
 
 # Resources on alignment
 
