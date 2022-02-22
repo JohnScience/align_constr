@@ -1,5 +1,5 @@
 [package]
-name = "constr_align"
+name = "align_constr"
 version = "0.1.0"
 edition = "2021"
 
