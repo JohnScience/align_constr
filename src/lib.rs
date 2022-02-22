@@ -1,3 +1,4 @@
+#![doc = include_str!("../README.md")]
 #![cfg_attr(feature = "const_trait_impl", feature(const_trait_impl))]
 #![cfg_attr(feature = "const_fn_trait_bound", feature(const_fn_trait_bound))]
 #![cfg_attr(feature = "const_mut_refs", feature(const_mut_refs))]
