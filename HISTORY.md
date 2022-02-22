@@ -1,6 +1,6 @@
 # Beginning
 
-`align_constr` crate started as an attempt to iterate on [`aligned`] crate. The author found that the implementation of [`aligned::Aligned`][`Aligned`] struct suited for much more than aligning for fixed, "literal" values and instead could be used for generating types that are "alignment-constrained" not only by inherent alignment requirements but also by requirements for "alignment constraint archetypes".
+[`align_constr`] crate started as an attempt to iterate on [`aligned`] crate. The author found that the implementation of [`aligned::Aligned`][`Aligned`] struct suited for much more than aligning for fixed, "literal" values and instead could be used for generating types that are "alignment-constrained" not only by inherent alignment requirements but also by requirements for "alignment constraint archetypes".
 
 Weirdly enough, in [`aligned::Aligned`][`Aligned`] the most important type parameter - which is the type of the stored value - for some unconvincing or unknown reason is stored **second**, not first. It sort of makes sense from the declaration, from the structure of [`aligned::Aligned`][`Aligned`], yet the author believes that semantically the type of the stored value is more important than the alignment constraint and therefore the type of the stored value must be the very first type parameter.
 
@@ -64,5 +64,6 @@ While all previous design choices are debatable, there is even more compelling r
 [`Aligned`]: https://docs.rs/aligned/0.4.0/aligned/struct.Aligned.html
 [`AlignConstr`]: https://docs.rs/align_constr/latest/align_constr/struct.AlignConstr.html
 [`core::ops::Deref`]: https://doc.rust-lang.org/beta/core/ops/trait.Deref.html
+[`core::ops::DerefMut`]: https://doc.rust-lang.org/beta/core/ops/trait.DerefMut.html
 [`alignas`]: https://en.cppreference.com/w/cpp/language/alignas
 [Named Type Parameters]: https://internals.rust-lang.org/t/named-type-parameters/6921
