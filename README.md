@@ -3,12 +3,15 @@
 
 # [Alignment][alignment]-constrained [newtype]
 
-[Newtype][newtype] whose [alignment] is constrained not only by the [inherent alignment requirements](https://doc.rust-lang.org/reference/type-layout.html) of the underlying type but also by the alignment requirements of the "alignment constraint archetype". Within this context, "alignment constraint archetype" `AlignConstrArchetype` is a type whose alignment constraint is imposed on the underlying type `T` to produce a [refinement type](https://en.wikipedia.org/wiki/Refinement_type) [`AlignConstr`]`<T, AlignConstrArchetype>` implemented via a [New Type Patter][newtype].
+[Newtype][newtype] whose [alignment] is constrained not only by the [inherent alignment requirements](https://doc.rust-lang.org/reference/type-layout.html) of the underlying type but also by the alignment requirements of the "alignment constraint archetype". Within this context, "alignment constraint archetype" `AlignConstrArchetype` is a type whose alignment constraint is imposed on the underlying type `T` to produce [AlignConstr`<T, AlignConstrArchetype>`][`AlignConstr`].
 
-**Note**: "alignment constraint archetype" is a
+## Notes
+
+* "alignment constraint archetype" is a
 [stipulative](https://www.ucfmapper.com/education/various-types-definitions/#:~:text=Stipulative%20definitions)
 [functional](https://www.ucfmapper.com/education/various-types-definitions/#:~:text=Functional%20definitions)
-definition. 
+definition.
+* [AlignConstr`<T, AlignConstrArchetype>`][`AlignConstr`] can also be seen as a [refinement type](https://en.wikipedia.org/wiki/Refinement_type) implemented via a [parameterized](http://www.angelikalanger.com/GenericsFAQ/FAQSections/ParameterizedTypes.html#FAQ001) [newtype].
 
 # Resources on alignment
 
@@ -22,7 +25,7 @@ definition.
 
 # [`align_constr`] vs [`aligned`]
 
-[`aligned`] is a popular library that [served as a prototype](https://github.com/JohnScience/align_constr/blob/main/HISTORY.md) for [`align_constr`]. At the time of writing, [`align_constr`] featurewise and idiomatically superior and provides not only more extensive documentation but also a selection of resources on the subject. To be fair, the quality of [`aligned`] crate's [CI] is still unmatched by [`align_constr`]. However, the limited [scope] of both libraries still makes [`align_constr`] arguably better for any use case.
+[`aligned`] is a popular library that [served as a prototype](https://github.com/JohnScience/align_constr/blob/main/HISTORY.md) for [`align_constr`]. At the time of writing, [`align_constr`] featurewise and idiomatically superior and provides not only more extensive documentation but also a selection of resources on the subject. To pay respect to the contributors of [`aligned`] crate, the quality of their creation's [CI] is still unmatched by [`align_constr`]. However, the limited [scope] of both libraries nonetheless makes [`align_constr`] arguably better for any use case.
 
 [overalignment]: https://stackoverflow.com/questions/8732441/what-is-overalignment-of-execution-regions-and-input-sections
 [`AlignConstr`]: https://docs.rs/align_constr/latest/align_constr/struct.AlignConstr.html
