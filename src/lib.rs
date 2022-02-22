@@ -7,6 +7,68 @@ use remove_macro_call::remove_macro_call;
 #[cfg(not(all(feature = "const_trait_impl", feature = "const_fn_trait_bound")))]
 use unconst_trait_impl::unconst_trait_impl;
 
+/// [N-ZSTs](https://github.com/rust-lang/unsafe-code-guidelines/issues/172), i.e.
+/// [zero-sized datatypes](https://runrust.miraheze.org/wiki/Zero-sized_type) whose
+/// [alignment](https://www.geeksforgeeks.org/data-structure-alignment/) is `N`.
+pub mod n_zst {
+    /// 2-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
+    /// 
+    /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
+    #[repr(align(1))]
+    pub struct ZST1;
+
+    /// 2-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
+    /// 
+    /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
+    #[repr(align(2))]
+    pub struct ZST2;
+
+    /// 4-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
+    /// 
+    /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
+    #[repr(align(4))]
+    pub struct ZST4;
+
+    /// 8-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
+    /// 
+    /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
+    #[repr(align(8))]
+    pub struct ZST8;
+
+    /// 16-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
+    /// 
+    /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
+    #[repr(align(16))]
+    pub struct ZST16;
+
+    /// 32-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
+    /// 
+    /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
+    #[repr(align(32))]
+    pub struct ZST32;
+
+    /// 64-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
+    /// 
+    /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
+    #[repr(align(64))]
+    pub struct ZST64;
+
+    /// 128-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
+    /// 
+    /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
+    #[repr(align(128))]
+    pub struct ZST128;
+}
+
+/// Alignment-constrained datatype, i.e. a type whose
+/// [alignment](https://www.geeksforgeeks.org/data-structure-alignment/)
+/// is constrained not only by inherent alignment requirements of the underlying type but also
+/// by the alignment requirements of the "alignment constraint archetype".
+/// 
+/// **Note**: "alignment constraint archetype" is a
+/// [stipulative](https://www.ucfmapper.com/education/various-types-definitions/#:~:text=Stipulative%20definitions)
+/// [functional](https://www.ucfmapper.com/education/various-types-definitions/#:~:text=Functional%20definitions)
+/// definition.
 // repr(C) enforces the order of fields
 #[repr(C)]
 pub struct AlignConstr<T, AlignConstrArchetype>
