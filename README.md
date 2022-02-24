@@ -25,7 +25,7 @@ definition.
 
 # [`align_constr`] vs [`aligned`]
 
-[`aligned`] is a popular library that [served as a prototype](https://github.com/JohnScience/align_constr/blob/main/HISTORY.md) for [`align_constr`]. At the time of writing, [`align_constr`] featurewise and idiomatically superior and provides not only more extensive documentation but also a selection of resources on the subject. To pay respect to the contributors of [`aligned`] crate, the quality of their creation's [CI] is still unmatched by [`align_constr`]. However, the limited [scope] of both libraries nonetheless makes [`align_constr`] arguably better for any use case.
+[`aligned`] is a popular library that [served as a prototype](https://github.com/JohnScience/align_constr/blob/main/HISTORY.md) for [`align_constr`]. At the time of writing, [`align_constr`] is featurewise and idiomatically superior and provides not only more extensive documentation but also a selection of resources on the subject. To pay respect to the contributors of [`aligned`] crate, the quality of their creation's [CI] is still unmatched by [`align_constr`]. However, the limited [scope] of both libraries nonetheless makes [`align_constr`] arguably better for any use case.
 
 [overalignment]: https://stackoverflow.com/questions/8732441/what-is-overalignment-of-execution-regions-and-input-sections
 [`AlignConstr`]: https://docs.rs/align_constr/latest/align_constr/struct.AlignConstr.html
