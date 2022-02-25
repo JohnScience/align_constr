@@ -1,4 +1,5 @@
 #![doc = include_str!("../README.md")]
+#![no_std]
 #![cfg_attr(feature = "const_trait_impl", feature(const_trait_impl))]
 #![cfg_attr(feature = "const_fn_trait_bound", feature(const_fn_trait_bound))]
 #![cfg_attr(feature = "const_mut_refs", feature(const_mut_refs))]
@@ -101,7 +102,7 @@ pub mod n_zst {
 /// are used not for accessing the underlying value but for dereferencing that value in case
 /// **if** it is possible. Therefore, the following code should fail to compile:
 ///
-/// ```compile_fail
+/// ```rust, compile_fail
 /// use align_constr::{AlignConstr, n_zst::ZST64};
 ///
 /// fn deref_must_be_impossible_when_underlying_type_is_not_deref() {
@@ -113,7 +114,7 @@ pub mod n_zst {
 ///
 /// and the one below must succeed:
 ///
-/// ```
+/// ```rust
 /// use align_constr::{AlignConstr, n_zst::ZST128};
 ///
 /// fn deref_is_performed_on_underlying_value() {
