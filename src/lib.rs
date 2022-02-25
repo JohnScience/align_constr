@@ -191,6 +191,32 @@ where
 // Moreover, the alternative (the code below) can be rewritten as constant
 // implementation of New<T> trait
 impl<T, AlignConstrArchetype> AlignConstr<T, AlignConstrArchetype> {
+    /// Constructs a new alignment-constrained value
+    /// 
+    /// # Examples
+    /// 
+    /// Non-const context:
+    /// 
+    /// ```
+    /// use align_constr::{AlignConstr, n_zst::ZST128};
+    /// 
+    /// fn check_new() {
+    ///     let overaligned_u8 = AlignConstr::<u8, ZST128>::new(3);
+    ///     assert!(overaligned_u8.value == 3);
+    ///     // requires non-const context
+    ///     assert!(&overaligned_u8 as *const _ as usize % 128 == 0);
+    /// }
+    /// 
+    /// check_new()
+    /// ```
+    /// 
+    /// Const context:
+    /// ```
+    /// fn const const_check_new() {
+    ///     let overaligned_u8 = AlignConstr::<u8, ZST128>::new(3);
+    ///     assert!(overaligned_u8.value == 3);
+    /// }
+    /// ```
     pub const fn new(value: T) -> AlignConstr<T, AlignConstrArchetype> {
         AlignConstr {
             _alignment_constraint: [],
@@ -500,10 +526,5 @@ mod tests {
         use core::mem::align_of;
 
         assert!(align_of::<AlignConstr::<ZST512, u8>>() == align_of::<ZST512>());
-    }
-
-    #[test]
-    const fn check_new() {
-        let _overaligned_u8 = AlignConstr::<u8, ZST128>::new(3);
     }
 }
