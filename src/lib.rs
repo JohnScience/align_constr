@@ -11,66 +11,66 @@ use unconst_trait_impl::unconst_trait_impl;
 /// [N-ZSTs](https://github.com/rust-lang/unsafe-code-guidelines/issues/172), i.e.
 /// [zero-sized datatypes](https://runrust.miraheze.org/wiki/Zero-sized_type) whose
 /// [alignment](https://www.geeksforgeeks.org/data-structure-alignment/) is `N`.
-/// 
+///
 /// If you have to deal with larger alignments, please contact the author via the
 /// email provided in Cargo.toml or via an issue.
 pub mod n_zst {
     /// 2-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
-    /// 
+    ///
     /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
     #[repr(align(1))]
     pub struct ZST1;
 
     /// 2-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
-    /// 
+    ///
     /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
     #[repr(align(2))]
     pub struct ZST2;
 
     /// 4-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
-    /// 
+    ///
     /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
     #[repr(align(4))]
     pub struct ZST4;
 
     /// 8-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
-    /// 
+    ///
     /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
     #[repr(align(8))]
     pub struct ZST8;
 
     /// 16-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
-    /// 
+    ///
     /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
     #[repr(align(16))]
     pub struct ZST16;
 
     /// 32-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
-    /// 
+    ///
     /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
     #[repr(align(32))]
     pub struct ZST32;
 
     /// 64-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
-    /// 
+    ///
     /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
     #[repr(align(64))]
     pub struct ZST64;
 
     /// 128-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
-    /// 
+    ///
     /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
     #[repr(align(128))]
     pub struct ZST128;
 
     /// 256-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
-    /// 
+    ///
     /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
     #[repr(align(256))]
     pub struct ZST256;
 
     /// 512-[ZST](https://runrust.miraheze.org/wiki/Zero-sized_type).
-    /// 
+    ///
     /// Read more about n-ZSTs [here](https://github.com/rust-lang/unsafe-code-guidelines/issues/172)
     #[repr(align(512))]
     pub struct ZST512;
@@ -82,47 +82,86 @@ pub mod n_zst {
 /// by the alignment requirements of the "alignment constraint archetype". Within this context,
 /// "alignment constraint archetype" `AlignConstrArchetype` is a type whose alignment constraint
 /// is imposed on the underlying type `T` to produce [`AlignConstr<T, AlignConstrArchetype>`][`AlignConstr`].
-/// 
+///
 /// # Notes
-/// 
+///
 /// * "alignment constraint archetype" is a
 /// [stipulative](https://www.ucfmapper.com/education/various-types-definitions/#:~:text=Stipulative%20definitions)
 /// [functional](https://www.ucfmapper.com/education/various-types-definitions/#:~:text=Functional%20definitions)
 /// definition.
-/// 
+///
 /// * [`AlignConstr<T, AlignConstrArchetype>`][`AlignConstr`] for some underlying type `T` and
 /// "alignment constraint archetype" `AlignConstrArchetype` can also be seen as a
 /// [refinement type](https://en.wikipedia.org/wiki/Refinement_type)
 /// [reified](https://en.wikipedia.org/wiki/Reification_(computer_science)) in the form of a
 /// [parameterized](http://www.angelikalanger.com/GenericsFAQ/FAQSections/ParameterizedTypes.html#FAQ001)
 /// [newtype](https://rust-unofficial.github.io/patterns/patterns/behavioural/newtype.html).
-/// 
-/// Unlike in `aligned` crate, [`Deref`][`core::ops::Deref`] and [`DerefMut`][`core::ops::DerefMut`]
+///
+/// Unlike in [`aligned`] crate, [`Deref`][`core::ops::Deref`] and [`DerefMut`][`core::ops::DerefMut`]
 /// are used not for accessing the underlying value but for dereferencing that value in case
 /// **if** it is possible. Therefore, the following code should fail to compile:
-/// 
+///
 /// ```compile_fail
 /// use align_constr::{AlignConstr, n_zst::ZST64};
-/// 
+///
 /// fn deref_must_be_impossible_when_underlying_type_is_not_deref() {
 ///     let overaligned_u8 = AlignConstr::<u8, ZST64>::new(3);
 ///     // Since u8 doesn't implement Deref, neither does AlignConstr::<u8, ...>
-///     let s = *overaligned_u8;
+///     let smth = *overaligned_u8;
 /// }
 /// ```
-/// 
+///
 /// and the one below must succeed:
-/// 
+///
 /// ```
 /// use align_constr::{AlignConstr, n_zst::ZST128};
+///
 /// fn deref_is_performed_on_underlying_value() {
 ///     let overaligned_u8_ref = AlignConstr::<&u8, ZST128>::new(&3);
 ///     // Since &u8 implements Deref, so does AlignConstr::<&u8, ...>
 ///     assert_eq!(*overaligned_u8_ref, 3);
 /// }
-/// 
+///
 /// deref_is_performed_on_underlying_value();
 /// ```
+///
+/// The underlying value can be accessed via the `.value` field and
+/// it can be done in constant contexts even on stable Rust!
+///
+/// ```
+/// use align_constr::{AlignConstr, n_zst::ZST64};
+///
+/// const fn underlying_value_can_be_accessed_via_value_field() {
+///     let overaligned_u8 = AlignConstr::<u8, ZST64>::new(3);
+///     assert!(overaligned_u8.value == 3u8);
+/// }
+///
+/// underlying_value_can_be_accessed_via_value_field();
+/// ```
+///
+/// Here's a comprehensive list of traits that could be expected
+/// to be implemented for [`AlignConstr`]
+/// constantly under [feature flags](https://doc.rust-lang.org/beta/unstable-book/)
+/// and non-constantly on stable Rust, yet it is not the case:
+///
+/// * [~~core::marker::Copy~~][core::marker::Copy]
+/// > [`core::marker::Copy`] cannot be implemented for `T: `[`core::marker::Copy`] on
+/// > [`AlignConstr`]`<T, AlignConstrArchetype>` due to the implementation thereof.
+/// >
+/// > At the time of writing, [`AlignConstr`] relies on a zero-length array
+/// > `[AlignConstrArchetype;0]`; but
+/// > [zero-length arrays are non-`Copy`](https://github.com/rust-lang/rust/issues/94313)
+/// > and there is no known alternative for constraining the alignment other than
+/// > `#[repr(align(N))]` where N is an integer literal.
+/// >
+/// > The author of [`aligned`] crate hasn't opened an issue when found this shortcoming.
+/// * [`core::ops::Index`]`<Idx>`
+/// > WIP (Work in Progress)
+/// >
+/// > The author of [`aligned`] crate implemented the trait only for
+/// > `Idx = `[`RangeTo`][core::ops::RangeTo]`<`[`usize`]`>`.
+///
+/// [`aligned`]: https://crates.io/crates/aligned
 // repr(C) enforces the order of fields
 #[repr(C)]
 pub struct AlignConstr<T, AlignConstrArchetype>
@@ -201,6 +240,7 @@ unconst_trait_impl! {
     }
 }
 
+// The purpose of this implementation is still unclear to the author
 #[cfg_attr(
     all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
     remove_macro_call
@@ -416,11 +456,14 @@ unconst_trait_impl! {
 
 #[cfg(test)]
 mod tests {
-    use crate::{AlignConstr, n_zst::{ZST1, ZST2, ZST4, ZST8, ZST16, ZST32, ZST64, ZST128, ZST256, ZST512}};
+    use crate::{
+        n_zst::{ZST1, ZST128, ZST16, ZST2, ZST256, ZST32, ZST4, ZST512, ZST64, ZST8},
+        AlignConstr,
+    };
 
     // This function tests the assumption about the relation
     // between core::mem::align_of::<u8>() and core::mem::align_of::<ZST512>().
-    // 
+    //
     // Other tests might fail to check the intended behevior if this test fails.
     #[test]
     const fn align_of_u8_le_align_of_zst512() {
@@ -457,15 +500,9 @@ mod tests {
 
         assert!(align_of::<AlignConstr::<ZST512, u8>>() == align_of::<ZST512>());
     }
-    
+
     #[test]
     const fn check_new() {
         let _overaligned_u8 = AlignConstr::<u8, ZST128>::new(3);
-    }
-
-    #[test]
-    const fn underlying_value_can_be_accessed() {
-        let overaligned_u8 = AlignConstr::<u8, ZST64>::new(3);
-        assert!(overaligned_u8.value == 3u8);
     }
 }
