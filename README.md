@@ -25,7 +25,14 @@ definition.
 
 # Example
 
+```rust
+use align_constr::{AlignConstr, n_zst::ZST128};
 
+let overaligned_u8 = AlignConstr::<u8, ZST128>::new(3);
+assert!(overaligned_u8.value == 3);
+// requires non-const context
+assert!(&overaligned_u8 as *const _ as usize % 128 == 0);
+```
 
 # [`align_constr`] vs [`aligned`]
 

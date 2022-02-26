@@ -212,7 +212,9 @@ impl<T, AlignConstrArchetype> AlignConstr<T, AlignConstrArchetype> {
     /// 
     /// Const context:
     /// ```
-    /// fn const const_check_new() {
+    /// use align_constr::{AlignConstr, n_zst::ZST128};
+    /// 
+    /// const fn const_check_new() {
     ///     let overaligned_u8 = AlignConstr::<u8, ZST128>::new(3);
     ///     assert!(overaligned_u8.value == 3);
     /// }
