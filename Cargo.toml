@@ -1,14 +1,40 @@
 [package]
 name = "align_constr"
 version = "0.1.0"
+authors = ["Dmitrii Demenev <demenev.dmitriy1@gmail.com>"]
 edition = "2021"
+rust-version = "1.56.1" # https://github.com/foresterre/cargo-msrv/issues/244
+description = "Like `aligned` but better. Newtype whose alignment is constrained not only by the inherent alignment requirements of the underlying type but also by the alignment requirements of the \"alignment constraint archetype\""
+documentation = "https://docs.rs/align_constr"
+readme = "README.md"
+repository = "https://github.com/JohnScience/align_constr"
+license = "MIT OR Apache-2.0"
+# license-file | not needed
+keywords = ["maths", "traits"]
+categories = ["no-std", "memory-management"] # https://crates.io/category_slugs
+# workspace | not needed
+# build | not needed
+# links | not needed
+# exclude | not needed
+include = [
+    "/Cargo.toml",
+    "/LICENSE_APACHE",
+    "/LICENSE_MIT",
+    "/README.md",
+    "/src/**",
+    "/tests/**",
+]
+autobins = false
+autoexamples = false
+autotests = false
+autobenches = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 unconst_trait_impl =  "0.1.4"
 remove_macro_call = "0.1.1"
-as-slice = "0.2.1"
+as-slice = { version = "0.2.1", optional = true }
 
 [features]
 nightly = ["const_trait_impl", "const_fn_trait_bound", "const_mut_refs"]

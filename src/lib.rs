@@ -292,6 +292,7 @@ unconst_trait_impl! {
     }
 }
 
+#[cfg(feature = "as_slice")]
 #[cfg_attr(
     all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
     remove_macro_call
@@ -309,6 +310,7 @@ unconst_trait_impl! {
     }
 }
 
+#[cfg(feature = "as_slice")]
 #[cfg_attr(
     all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
     remove_macro_call
