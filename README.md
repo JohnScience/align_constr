@@ -38,6 +38,8 @@ assert!(&overaligned_u8 as *const _ as usize % 128 == 0);
 
 [`aligned`] is a popular library that [served as a prototype](https://github.com/JohnScience/align_constr/blob/main/HISTORY.md) for [`align_constr`]. At the time of writing, [`align_constr`] is featurewise and idiomatically superior and provides not only more extensive documentation but also a selection of resources on the subject. To pay respect to the contributors of [`aligned`] crate, the quality of their creation's [CI] is still unmatched by [`align_constr`]. However, the limited [scope] of both libraries nonetheless makes [`align_constr`] arguably better for any use case.
 
+**Note**: Unlike in [`aligned`], the dependency on [`as_slice`](https://crates.io/crates/as-slice) is optional.
+
 # About [`align_constr`]
 
 * [`#[no_std]`](https://docs.rust-embedded.org/book/intro/no-std.html#summary) friendly
