@@ -141,21 +141,26 @@ pub mod n_zst {
 /// ```
 ///
 /// Here's a comprehensive list of traits that could be expected
-/// to be implemented for [`AlignConstr`]
+/// to be implemented for all reasonable
+/// [parameterized types](http://www.angelikalanger.com/GenericsFAQ/FAQSections/ParameterizedTypes.html#FAQ001)
+/// of [`AlignConstr`]
 /// constantly under [feature flags](https://doc.rust-lang.org/beta/unstable-book/)
 /// and non-constantly on stable Rust, yet it is not the case:
 ///
-/// * [~~core::marker::Copy~~][core::marker::Copy]
+/// * [core::marker::Copy]
 /// > [`core::marker::Copy`] cannot be implemented for `T: `[`core::marker::Copy`] on
-/// > [`AlignConstr`]`<T, AlignConstrArchetype>` due to the implementation thereof.
+/// > [`AlignConstr`]`<T, AlignConstrArchetype>` unconditionally due to the implementation thereof.
 /// >
 /// > At the time of writing, [`AlignConstr`] relies on a zero-length array
 /// > `[AlignConstrArchetype;0]`; but
 /// > [zero-length arrays are non-`Copy`](https://github.com/rust-lang/rust/issues/94313)
-/// > and there is no known alternative for constraining the alignment other than
-/// > `#[repr(align(N))]` where N is an integer literal.
+/// > unless the type of the stored value (even 0 times) is `Copy`. That's why there is a temporary additional
+/// > condition `AlignConstrArchetype: Copy` for `[AlignConstrArchetype;0]` and, ultimately,
+/// > [`AlignConstr`]`<T, AlignConstrArchetype>: Copy`. Currently, there is no known alternative
+/// > for constraining the alignment other than `#[repr(align(N))]` where N is an integer literal.
 /// >
-/// > The author of [`aligned`] crate hasn't opened an issue when found this shortcoming.
+/// > The author of [`aligned`] crate hasn't opened an issue when found this shortcoming and
+/// > didn't provide even a restricted version of `Copy` implementation.
 /// * [`core::ops::Index`]`<Idx>`
 /// > WIP (Work in Progress)
 /// >
@@ -345,6 +350,25 @@ unconst_trait_impl! {
         fn clone_from(&mut self, source: &Self) {
            self.value = source.value.clone();
         }
+    }
+}
+
+#[cfg_attr(
+    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
+    remove_macro_call
+)]
+unconst_trait_impl! {
+    impl<T, AlignConstrArchetype> const Copy for AlignConstr<T, AlignConstrArchetype>
+    where
+        T: ~const Copy,
+        // At the time of writing, the bound below is necessary because
+        // zero-length arrays are non-Copy:
+        // https://github.com/rust-lang/rust/issues/94313
+        //
+        // Without lattice specialization, the condition for
+        // `[AlignConstrArchetype; 0]: Copy` is that `AlignConstrArchetype: Copy`
+        [AlignConstrArchetype; 0]: ~const Copy,
+    {
     }
 }
 
