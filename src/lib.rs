@@ -517,6 +517,12 @@ mod tests {
         AlignConstr,
     };
 
+    #[test]
+    fn size_of_align_constr_t_geq_size_of_t() {
+        use core::mem::size_of;
+        assert!(size_of::<AlignConstr::<u8,u16>>() >= size_of::<u8>());
+    }
+
     // This function tests the assumption about the relation
     // between core::mem::align_of::<u8>() and core::mem::align_of::<ZST512>().
     //
