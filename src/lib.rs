@@ -79,10 +79,11 @@ pub mod n_zst {
 
 /// Alignment-constrained datatype, i.e. a type whose
 /// [alignment](https://www.geeksforgeeks.org/data-structure-alignment/)
-/// is constrained not only by the inherent alignment requirements of the underlying type but also
-/// by the alignment requirements of the "alignment constraint archetype". Within this context,
-/// "alignment constraint archetype" `AlignConstrArchetype` is a type whose alignment constraint
-/// is imposed on the underlying type `T` to produce [`AlignConstr<T, AlignConstrArchetype>`][`AlignConstr`].
+/// is constrained not only by the inherent alignment requirements of the underlying type `T`, whose value
+/// is stored internally, but also by the alignment requirements of the "alignment constraint archetype"
+/// `AlignConstrArchetype`. Within this context, "alignment constraint archetype" `AlignConstrArchetype`
+/// is a type whose alignment constraint is imposed on the underlying type `T` to produce
+/// [`AlignConstr<T, AlignConstrArchetype>`][`AlignConstr`].
 ///
 /// # Notes
 ///
