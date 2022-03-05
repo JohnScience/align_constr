@@ -22,6 +22,10 @@ definition.
 * ["What is overalignment of execution regions and input sections?", Stack Overflow][overalignment]
 * ["Data Structure alignment", GeeksforGeeks](https://www.geeksforgeeks.org/data-structure-alignment/)
 * ["Type Layout", The Rust Referece](https://doc.rust-lang.org/reference/type-layout.html)
+* ["The Lost Art of Structure Packing"](http://www.catb.org/esr/structure-packing/), article by Eric. S. Raymond (also known as ESR) - an American software developer, open-source software advocate, and author of the 1997 essay and 1999 book The Cathedral and the Bazaar
+> Rather deep exploration of the topic from the point of view of a C programming expert. The article covers not only the information about alignment but also related related topics as applied to C, as well as sever other programming languages, including Rust.
+>
+> Dmitrii Demenev
 
 # Example
 
