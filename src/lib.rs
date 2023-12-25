@@ -1,13 +1,5 @@
 #![doc = include_str!("../README.md")]
 #![no_std]
-#![cfg_attr(feature = "const_trait_impl", feature(const_trait_impl))]
-#![cfg_attr(feature = "const_fn_trait_bound", feature(const_fn_trait_bound))]
-#![cfg_attr(feature = "const_mut_refs", feature(const_mut_refs))]
-
-#[cfg(all(feature = "const_trait_impl", feature = "const_fn_trait_bound"))]
-use remove_macro_call::remove_macro_call;
-#[cfg(not(all(feature = "const_trait_impl", feature = "const_fn_trait_bound")))]
-use unconst_trait_impl::unconst_trait_impl;
 
 /// [N-ZSTs](https://github.com/rust-lang/unsafe-code-guidelines/issues/172), i.e.
 /// [zero-sized datatypes](https://runrust.miraheze.org/wiki/Zero-sized_type) whose
@@ -198,28 +190,28 @@ where
 // implementation of New<T> trait
 impl<T, AlignConstrArchetype> AlignConstr<T, AlignConstrArchetype> {
     /// Constructs a new alignment-constrained value
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// Non-const context:
-    /// 
+    ///
     /// ```
     /// use align_constr::{AlignConstr, n_zst::ZST128};
-    /// 
+    ///
     /// fn check_new() {
     ///     let overaligned_u8 = AlignConstr::<u8, ZST128>::new(3);
     ///     assert!(overaligned_u8.value == 3);
     ///     // requires non-const context
     ///     assert!(&overaligned_u8 as *const _ as usize % 128 == 0);
     /// }
-    /// 
+    ///
     /// check_new()
     /// ```
-    /// 
+    ///
     /// Const context:
     /// ```
     /// use align_constr::{AlignConstr, n_zst::ZST128};
-    /// 
+    ///
     /// const fn const_check_new() {
     ///     let overaligned_u8 = AlignConstr::<u8, ZST128>::new(3);
     ///     assert!(overaligned_u8.value == 3);
@@ -236,277 +228,178 @@ impl<T, AlignConstrArchetype> AlignConstr<T, AlignConstrArchetype> {
 // At the time of writing, `aligned` crate unconditionally
 // non-constantly implemented Deref for
 // accessing the `value` field.
-#[cfg_attr(
-    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
-    remove_macro_call
-)]
-unconst_trait_impl! {
-    impl<T,AlignConstrArchetype> const core::ops::Deref for AlignConstr<T,AlignConstrArchetype>
-    where
-        T: ?Sized + ~const core::ops::Deref,
-    {
-        type Target = <T as core::ops::Deref>::Target;
+impl<T, AlignConstrArchetype> core::ops::Deref for AlignConstr<T, AlignConstrArchetype>
+where
+    T: ?Sized + core::ops::Deref,
+{
+    type Target = <T as core::ops::Deref>::Target;
 
-        fn deref(&self) -> &Self::Target {
-            self.value.deref()
-        }
+    fn deref(&self) -> &Self::Target {
+        self.value.deref()
     }
 }
 
 // At the time of writing, `aligned` crate unconditionally
 // non-constantly implemented DerefMut for
 // accessing the `value` field.
-#[cfg_attr(
-    all(
-        feature = "const_trait_impl",
-        feature = "const_fn_trait_bound",
-        feature = "const_mut_refs"
-    ),
-    remove_macro_call
-)]
-unconst_trait_impl! {
-    impl<T, AlignConstrArchetype> const core::ops::DerefMut for AlignConstr<T, AlignConstrArchetype>
-    where
-        T: ?Sized + ~const core::ops::DerefMut,
-    {
-        fn deref_mut(&mut self) -> &mut <T as core::ops::Deref>::Target {
-            self.value.deref_mut()
-        }
+impl<T, AlignConstrArchetype> core::ops::DerefMut for AlignConstr<T, AlignConstrArchetype>
+where
+    T: ?Sized + core::ops::DerefMut,
+{
+    fn deref_mut(&mut self) -> &mut <T as core::ops::Deref>::Target {
+        self.value.deref_mut()
     }
 }
 
-// The purpose of this implementation is still unclear to the author
-#[cfg_attr(
-    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
-    remove_macro_call
-)]
-unconst_trait_impl! {
-    impl<T, AlignConstrArchetype> const core::ops::Index<core::ops::RangeTo<usize>>
-        for AlignConstr<[T], AlignConstrArchetype>
-    where
-        [T]: ~const core::ops::Index<core::ops::RangeTo<usize>, Output=[T]>,
-    {
-        type Output = <[T] as core::ops::Index<core::ops::RangeTo<usize>>>::Output;
+impl<T, AlignConstrArchetype> core::ops::Index<core::ops::RangeTo<usize>>
+    for AlignConstr<[T], AlignConstrArchetype>
+where
+    [T]: core::ops::Index<core::ops::RangeTo<usize>, Output = [T]>,
+{
+    type Output = <[T] as core::ops::Index<core::ops::RangeTo<usize>>>::Output;
 
-        fn index(&self, range: core::ops::RangeTo<usize>) -> &Self::Output {
-            // The unsafe block has been this way in `aligned`
-            // TODO: figure out the intention and fix the code.
-            unsafe {
-                &*(&self.value[range] as *const [T] as *const Self::Output )
-            }
-        }
+    fn index(&self, range: core::ops::RangeTo<usize>) -> &Self::Output {
+        // The unsafe block has been this way in `aligned`
+        // TODO: figure out the intention and fix the code.
+        unsafe { &*(&self.value[range] as *const [T] as *const Self::Output) }
     }
 }
 
 #[cfg(feature = "as_slice")]
-#[cfg_attr(
-    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
-    remove_macro_call
-)]
-unconst_trait_impl! {
-    impl<T, AlignConstrArchetype> const ::as_slice::AsSlice for AlignConstr<T, AlignConstrArchetype>
-    where
-        T: ~const ::as_slice::AsSlice,
-    {
-        type Element = T::Element;
+impl<T, AlignConstrArchetype> ::as_slice::AsSlice for AlignConstr<T, AlignConstrArchetype>
+where
+    T: ::as_slice::AsSlice,
+{
+    type Element = T::Element;
 
-        fn as_slice(&self) -> &[T::Element] {
-            self.value.as_slice()
-        }
+    fn as_slice(&self) -> &[T::Element] {
+        self.value.as_slice()
     }
 }
 
 #[cfg(feature = "as_slice")]
-#[cfg_attr(
-    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
-    remove_macro_call
-)]
-unconst_trait_impl! {
-    impl<T, AlignConstrArchetype> const ::as_slice::AsMutSlice for AlignConstr<T, AlignConstrArchetype>
-    where
-        T: ~const ::as_slice::AsMutSlice,
-    {
-        fn as_mut_slice(&mut self) -> &mut [T::Element] {
-            self.value.as_mut_slice()
+impl<T, AlignConstrArchetype> ::as_slice::AsMutSlice for AlignConstr<T, AlignConstrArchetype>
+where
+    T: ::as_slice::AsMutSlice,
+{
+    fn as_mut_slice(&mut self) -> &mut [T::Element] {
+        self.value.as_mut_slice()
+    }
+}
+
+impl<T, AlignConstrArchetype> Clone for AlignConstr<T, AlignConstrArchetype>
+where
+    T: Clone,
+{
+    fn clone(&self) -> Self {
+        Self {
+            _alignment_constraint: [],
+            value: self.value.clone(),
+        }
+    }
+
+    fn clone_from(&mut self, source: &Self) {
+        self.value = source.value.clone();
+    }
+}
+
+impl<T, AlignConstrArchetype> Copy for AlignConstr<T, AlignConstrArchetype>
+where
+    T: Copy,
+    // At the time of writing, the bound below is necessary because
+    // zero-length arrays are non-Copy:
+    // https://github.com/rust-lang/rust/issues/94313
+    //
+    // Without lattice specialization, the condition for
+    // `[AlignConstrArchetype; 0]: Copy` is that `AlignConstrArchetype: Copy`
+    [AlignConstrArchetype; 0]: Copy,
+{
+}
+
+impl<T, AlignConstrArchetype> Default for AlignConstr<T, AlignConstrArchetype>
+where
+    T: Default,
+{
+    fn default() -> Self {
+        Self {
+            _alignment_constraint: [],
+            value: T::default(),
         }
     }
 }
 
-#[cfg_attr(
-    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
-    remove_macro_call
-)]
-unconst_trait_impl! {
-    impl<T, AlignConstrArchetype> const Clone for AlignConstr<T, AlignConstrArchetype>
-    where
-        T: ~const Clone + ~const Drop
-    {
-        fn clone(&self) -> Self {
-            Self {
-                _alignment_constraint: [],
-                value: self.value.clone(),
-            }
-        }
+impl<T, AlignConstrArchetype> core::fmt::Debug for AlignConstr<T, AlignConstrArchetype>
+where
+    T: core::fmt::Debug,
+{
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.value.fmt(f)
+    }
+}
 
-        fn clone_from(&mut self, source: &Self) {
-           self.value = source.value.clone();
+impl<T, AlignConstrArchetype> core::fmt::Display for AlignConstr<T, AlignConstrArchetype>
+where
+    T: core::fmt::Display,
+{
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.value.fmt(f)
+    }
+}
+
+impl<T, AlignConstrArchetype> PartialEq for AlignConstr<T, AlignConstrArchetype>
+where
+    T: PartialEq,
+{
+    fn eq(&self, other: &Self) -> bool {
+        self.value == other.value
+    }
+}
+
+impl<T, AlignConstrArchetype> Eq for AlignConstr<T, AlignConstrArchetype>
+where
+    T: Eq,
+{
+    fn assert_receiver_is_total_eq(&self) {}
+}
+
+impl<T, AlignConstrArchetype> core::hash::Hash for AlignConstr<T, AlignConstrArchetype>
+where
+    T: core::hash::Hash,
+{
+    fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
+        self.value.hash(state);
+    }
+
+    // The following is implemented due to
+    // error: const trait implementations may not use non-const default functions
+    fn hash_slice<H>(data: &[Self], state: &mut H)
+    where
+        Self: Sized,
+        H: core::hash::Hasher,
+    {
+        let mut i = 0;
+        while i < data.len() {
+            data[i].hash(state);
+            i += 1;
         }
     }
 }
 
-#[cfg_attr(
-    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
-    remove_macro_call
-)]
-unconst_trait_impl! {
-    impl<T, AlignConstrArchetype> const Copy for AlignConstr<T, AlignConstrArchetype>
-    where
-        T: ~const Copy,
-        // At the time of writing, the bound below is necessary because
-        // zero-length arrays are non-Copy:
-        // https://github.com/rust-lang/rust/issues/94313
-        //
-        // Without lattice specialization, the condition for
-        // `[AlignConstrArchetype; 0]: Copy` is that `AlignConstrArchetype: Copy`
-        [AlignConstrArchetype; 0]: ~const Copy,
-    {
+impl<T, AlignConstrArchetype> core::cmp::Ord for AlignConstr<T, AlignConstrArchetype>
+where
+    T: Ord,
+{
+    fn cmp(&self, other: &Self) -> core::cmp::Ordering {
+        self.value.cmp(&other.value)
     }
 }
 
-#[cfg_attr(
-    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
-    remove_macro_call
-)]
-unconst_trait_impl! {
-    impl<T, AlignConstrArchetype> const Default for AlignConstr<T, AlignConstrArchetype>
-    where
-        T: ~const Default,
-    {
-        fn default() -> Self {
-            Self {
-                _alignment_constraint: [],
-                value: T::default(),
-            }
-        }
-    }
-}
-
-#[cfg_attr(
-    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
-    remove_macro_call
-)]
-unconst_trait_impl! {
-    impl<T, AlignConstrArchetype> const core::fmt::Debug for AlignConstr<T, AlignConstrArchetype>
-    where
-        T: ~const core::fmt::Debug,
-    {
-        fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-            self.value.fmt(f)
-        }
-    }
-}
-
-#[cfg_attr(
-    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
-    remove_macro_call
-)]
-unconst_trait_impl! {
-    impl<T, AlignConstrArchetype> const core::fmt::Display for AlignConstr<T, AlignConstrArchetype>
-    where
-        T: ~const core::fmt::Display,
-    {
-        fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-            self.value.fmt(f)
-        }
-    }
-}
-
-#[cfg_attr(
-    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
-    remove_macro_call
-)]
-unconst_trait_impl! {
-    impl<T, AlignConstrArchetype> const PartialEq for AlignConstr<T, AlignConstrArchetype>
-    where
-        T: ~const PartialEq,
-    {
-        fn eq(&self, other: &Self) -> bool {
-            self.value == other.value
-        }
-    }
-}
-
-#[cfg_attr(
-    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
-    remove_macro_call
-)]
-unconst_trait_impl! {
-    impl<T, AlignConstrArchetype> const Eq for AlignConstr<T, AlignConstrArchetype>
-    where
-        T: ~const Eq,
-    {
-        // The following is implemented due to
-        // error: const trait implementations may not use non-const default functions
-        fn assert_receiver_is_total_eq(&self) {}
-    }
-}
-
-#[cfg_attr(
-    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
-    remove_macro_call
-)]
-unconst_trait_impl! {
-    impl<T, AlignConstrArchetype> const core::hash::Hash for AlignConstr<T, AlignConstrArchetype>
-    where
-        T: ~const core::hash::Hash,
-    {
-        fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
-            self.value.hash(state);
-        }
-
-        // The following is implemented due to
-        // error: const trait implementations may not use non-const default functions
-        fn hash_slice<H>(data: &[Self], state: &mut H)
-        where
-            Self: Sized,
-            H: ~const core::hash::Hasher,
-        {
-            let mut i = 0;
-            while i < data.len() {
-                data[i].hash(state);
-                i+=1;
-            }
-        }
-    }
-}
-
-#[cfg_attr(
-    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
-    remove_macro_call
-)]
-unconst_trait_impl! {
-    impl<T, AlignConstrArchetype> const core::cmp::Ord for AlignConstr<T, AlignConstrArchetype>
-    where
-        T: ~const Ord,
-    {
-        fn cmp(&self, other: &Self) -> core::cmp::Ordering {
-            self.value.cmp(&other.value)
-        }
-    }
-}
-
-#[cfg_attr(
-    all(feature = "const_trait_impl", feature = "const_fn_trait_bound"),
-    remove_macro_call
-)]
-unconst_trait_impl! {
-    impl<T, AlignConstrArchetype> const core::cmp::PartialOrd for AlignConstr<T, AlignConstrArchetype>
-    where
-        T: ~const PartialOrd,
-    {
-        fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
-            self.value.partial_cmp(&other.value)
-        }
+impl<T, AlignConstrArchetype> core::cmp::PartialOrd for AlignConstr<T, AlignConstrArchetype>
+where
+    T: PartialOrd,
+{
+    fn partial_cmp(&self, other: &Self) -> Option<core::cmp::Ordering> {
+        self.value.partial_cmp(&other.value)
     }
 }
 
@@ -520,7 +413,7 @@ mod tests {
     #[test]
     fn size_of_align_constr_t_geq_size_of_t() {
         use core::mem::size_of;
-        assert!(size_of::<AlignConstr::<u8,u16>>() >= size_of::<u8>());
+        assert!(size_of::<AlignConstr::<u8, u16>>() >= size_of::<u8>());
     }
 
     // This function tests the assumption about the relation
